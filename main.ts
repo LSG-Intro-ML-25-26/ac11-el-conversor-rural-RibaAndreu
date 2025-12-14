@@ -1,25 +1,41 @@
-controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed() {
-    animation.runImageAnimation(nena, assets.animation`
-            nena-animation-down
-            `, 500, false)
+namespace SpriteKind {
+    export const trading = SpriteKind.create()
+}
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    animation.runImageAnimation(
+    steve,
+    assets.animation`nena-animation-down`,
+    500,
+    false
+    )
 })
-controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
-    animation.runImageAnimation(nena, assets.animation`
-            nena-animation-right
-            `, 500, false)
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    animation.runImageAnimation(
+    steve,
+    assets.animation`nena-animation-right`,
+    500,
+    false
+    )
 })
-controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
-    animation.runImageAnimation(nena, assets.animation`
-            nena-animation-left
-            `, 500, false)
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    animation.runImageAnimation(
+    steve,
+    assets.animation`nena-animation-left`,
+    500,
+    false
+    )
 })
-controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
-    animation.runImageAnimation(nena, assets.animation`
-            nena-animation-up
-            `, 500, false)
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    animation.runImageAnimation(
+    steve,
+    assets.animation`nena-animation-up`,
+    500,
+    false
+    )
 })
-let nena : Sprite = null
-nena = sprites.create(assets.image`
-    nena-front
-    `, SpriteKind.Player)
-controller.moveSprite(nena)
+let steve: Sprite = null
+scene.setBackgroundImage(assets.image`background`)
+steve = sprites.create(assets.image`pers`, SpriteKind.Player)
+let trade = sprites.create(assets.image`trade`, SpriteKind.trading)
+tiles.placeOnTile(trade, tiles.getTileLocation(-120, -15))
+controller.moveSprite(steve)

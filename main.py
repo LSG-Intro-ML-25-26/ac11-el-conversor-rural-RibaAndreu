@@ -1,5 +1,9 @@
+@namespace
+class SpriteKind:
+    trading = SpriteKind.create()
+
 def on_down_pressed():
-    animation.run_image_animation(nena,
+    animation.run_image_animation(steve,
         assets.animation("""
             nena-animation-down
             """),
@@ -8,7 +12,7 @@ def on_down_pressed():
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 def on_right_pressed():
-    animation.run_image_animation(nena,
+    animation.run_image_animation(steve,
         assets.animation("""
             nena-animation-right
             """),
@@ -17,7 +21,7 @@ def on_right_pressed():
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def on_left_pressed():
-    animation.run_image_animation(nena,
+    animation.run_image_animation(steve,
         assets.animation("""
             nena-animation-left
             """),
@@ -26,7 +30,7 @@ def on_left_pressed():
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
 def on_up_pressed():
-    animation.run_image_animation(nena,
+    animation.run_image_animation(steve,
         assets.animation("""
             nena-animation-up
             """),
@@ -34,8 +38,15 @@ def on_up_pressed():
         False)
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
-nena: Sprite = None
-nena = sprites.create(assets.image("""
-    nena-front
+steve: Sprite = None
+scene.set_background_image(assets.image("""
+    background
+    """))
+steve = sprites.create(assets.image("""
+    pers
     """), SpriteKind.player)
-controller.move_sprite(nena)
+trade = sprites.create(assets.image("""
+    trade
+    """), SpriteKind.trading)
+tiles.place_on_tile(trade, tiles.get_tile_location(-120, -15))
+controller.move_sprite(steve)
