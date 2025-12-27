@@ -121,13 +121,6 @@ icono_llenya.setFlag(SpriteFlag.StayInScreen, true)
 info.setScore(0)
 game.onUpdate(function on_on_update() {
     
-    if (!steve.overlapsWith(trade)) {
-        in_trading = false
-    }
-    
-})
-game.onUpdate(function on_on_update2() {
-    
     if (esta_sobre_arbol() && jugador_quieto()) {
         temps_parat += 1
         if (temps_parat >= 120) {
@@ -138,6 +131,13 @@ game.onUpdate(function on_on_update2() {
         
     } else {
         temps_parat = 0
+    }
+    
+})
+game.onUpdate(function on_on_update2() {
+    
+    if (!steve.overlapsWith(trade)) {
+        in_trading = false
     }
     
 })

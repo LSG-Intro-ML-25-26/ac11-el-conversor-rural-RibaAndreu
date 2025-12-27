@@ -126,12 +126,6 @@ icono_llenya.set_flag(SpriteFlag.STAY_IN_SCREEN, True)
 info.set_score(0)
 
 def on_on_update():
-    global in_trading
-    if not (steve.overlaps_with(trade)):
-        in_trading = False
-game.on_update(on_on_update)
-
-def on_on_update2():
     global temps_parat, troncos
     if esta_sobre_arbol() and jugador_quieto():
         temps_parat += 1
@@ -141,4 +135,10 @@ def on_on_update2():
             temps_parat = 0
     else:
         temps_parat = 0
+game.on_update(on_on_update)
+
+def on_on_update2():
+    global in_trading
+    if not (steve.overlaps_with(trade)):
+        in_trading = False
 game.on_update(on_on_update2)
