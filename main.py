@@ -5,8 +5,33 @@ class SpriteKind:
 def on_on_overlap(player2, house):
     global in_trading
     in_trading = True
-    game.show_long_text("Prem A per comerciar", DialogLayout.BOTTOM)
+    steve.say("A: Botiga", 200)
 sprites.on_overlap(SpriteKind.player, SpriteKind.trading, on_on_overlap)
+
+def obrir_botiga():
+    global i, opcio, idx, troncos
+    llista = "BOTIGA (Preus):\n"
+    while i <= len(product_names) - 1:
+        llista = "" + llista + ("" + str((i + 1))) + ". " + product_names[i] + " (" + ("" + str(product_values[i])) + ")\n"
+        i += 1
+    game.show_long_text(llista, DialogLayout.CENTER)
+    opcio = game.ask_for_number("Quin producte vols? (1-5)", 1)
+    idx = opcio - 1
+    if idx >= 0 and idx < len(product_names):
+        quantitat = game.ask_for_number("Quantes unitats de " + product_names[idx] + "?", 1)
+        if quantitat > 0:
+            preu_total = product_values[idx] * quantitat
+            if troncos >= preu_total:
+                troncos += 0 - preu_total
+                info.set_score(troncos)
+                music.ba_ding.play()
+                game.show_long_text("Has comprat " + ("" + str(quantitat)) + " " + product_names[idx],
+                    DialogLayout.BOTTOM)
+            else:
+                game.show_long_text("No tens prou llenya! Falten " + ("" + str((preu_total - troncos))),
+                    DialogLayout.BOTTOM)
+    else:
+        game.show_long_text("Opció no vàlida", DialogLayout.BOTTOM)
 
 def on_down_pressed():
     animation.run_image_animation(steve,
@@ -37,23 +62,9 @@ controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
 def on_a_pressed():
     if in_trading:
-        pass
+        obrir_botiga()
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
-def on_b_pressed():
-    global in_trading
-    in_trading = False
-controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
-
-def calcular_arbres(opcio: number, quantitat: number):
-    global index, arbres
-    index = opcio - 1
-    if index < 0 or index >= len(product_values):
-        return -1
-    if quantitat <= 0 or quantitat != Math.floor(quantitat):
-        return -2
-    arbres = product_values[index] * quantitat
-    return Math.round(arbres * 100) / 100
 def jugador_quieto():
     return steve.vx == 0 and steve.vy == 0
 
@@ -68,21 +79,19 @@ controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
 def esta_sobre_arbol():
     return steve.overlaps_with(arbol) or steve.overlaps_with(arbol2) or steve.overlaps_with(arbol3)
-troncos = 0
 temps_parat = 0
-arbres = 0
-index = 0
+troncos = 0
+idx = 0
+opcio = 0
+i = 0
 in_trading = False
 arbol3: Sprite = None
 arbol2: Sprite = None
 arbol: Sprite = None
 steve: Sprite = None
 product_values: List[number] = []
-product_names = ["Gallina",
-    "Patates (1.5 kg)",
-    "Cabra",
-    "Dotzena d'ous",
-    "Cavall"]
+product_names: List[str] = []
+product_names = ["Gallina", "Patates", "Cabra", "Ous", "Cavall"]
 product_values = [6, 2, 5, 3, 12]
 scene.set_background_image(assets.image("""
     fons
@@ -90,6 +99,8 @@ scene.set_background_image(assets.image("""
 steve = sprites.create(assets.image("""
     pers
     """), SpriteKind.player)
+steve.set_stay_in_screen(True)
+steve.z = 100
 trade = sprites.create(assets.image("""
     trade
     """), SpriteKind.trading)
@@ -103,7 +114,7 @@ arbol3 = sprites.create(assets.image("""
     arbol
     """), SpriteKind.enemy)
 arbol3.set_position(116, 36)
-arbol2.set_position(144, 90)
+arbol2.set_position(140, 90)
 arbol.set_position(80, 75)
 trade.set_position(25, 82)
 controller.move_sprite(steve, 100, 100)
@@ -115,14 +126,19 @@ icono_llenya.set_flag(SpriteFlag.STAY_IN_SCREEN, True)
 info.set_score(0)
 
 def on_on_update():
+    global in_trading
+    if not (steve.overlaps_with(trade)):
+        in_trading = False
+game.on_update(on_on_update)
+
+def on_on_update2():
     global temps_parat, troncos
     if esta_sobre_arbol() and jugador_quieto():
         temps_parat += 1
         if temps_parat >= 120:
-            # ~3 segons parat al costat de l'arbre
             troncos += 1
             info.set_score(troncos)
             temps_parat = 0
     else:
         temps_parat = 0
-game.on_update(on_on_update)
+game.on_update(on_on_update2)
