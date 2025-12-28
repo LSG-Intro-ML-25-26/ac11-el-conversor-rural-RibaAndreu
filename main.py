@@ -3,6 +3,7 @@ class SpriteKind:
     trading = SpriteKind.create()
     menu_ui = SpriteKind.create()
 
+# --- VARIABLES GLOBALS ---
 joc_iniciat = False
 in_trading = False
 troncos = 0
@@ -11,9 +12,10 @@ bucle_botiga = False
 
 # Noms dels productes
 product_names = ["Gallina", "Patata (Pack 1.5kg)", "Cabra", "Ous (12u)", "Cavall"]
+# Valors en TRONCOS: La patata ara val 2 troncos per cada unitat (que són 1.5kg)
 product_values = [6, 2, 5, 3, 12]
 
-# Sprites del joc
+# --- SPRITES ---
 steve: Sprite = None
 trade: Sprite = None
 arbol: Sprite = None
@@ -21,11 +23,12 @@ arbol2: Sprite = None
 arbol3: Sprite = None
 targeta_menu: Sprite = None
 
-# Càlcul comerç
+# --- MÈTODE DE CÀLCUL (Encapsulat) ---
 def calcular_conversi_llenya(id_prod: number, unitats: number):
     if unitats <= 0:
         return -1
     
+    # Validació d'animals i packs sencers (No venem mig cavall ni mig pack de patates)
     if unitats % 1 != 0:
         return -2
             
@@ -33,7 +36,7 @@ def calcular_conversi_llenya(id_prod: number, unitats: number):
     resultat = preu_unitari * unitats
     return Math.round_with_precision(resultat, 2)
 
-# Botiga joc
+# --- BOTIGA ---
 def obrir_botiga():
     global troncos, bucle_botiga
     steve.say("")
@@ -41,6 +44,7 @@ def obrir_botiga():
     bucle_botiga = True
     
     while bucle_botiga:
+        # Menú on s'explica que la patata va a 2 troncos el pack
         llista = "MERCAT D'ALCUBILLA:" + "\n" + "1. Gallina (6)" + "\n" + "2. Patata 1.5kg (2)" + "\n" + "3. Cabra (5)" + "\n" + "4. Ous 12u (3)" + "\n" + "5. Cavall (12)" + "\n" + "6. SORTIR"
         
         game.show_long_text(llista, DialogLayout.CENTER)
@@ -75,7 +79,7 @@ def obrir_botiga():
             game.show_long_text("Opció no vàlida", DialogLayout.BOTTOM)
     steve.say("")
 
-# Menú inical
+# --- PANTALLA INICIAL ---
 def mostrar_menu_inicial():
     global targeta_menu
     img_menu = image.create(160, 90)
@@ -114,6 +118,7 @@ def iniciar_partida():
     icono.set_flag(SpriteFlag.STAY_IN_SCREEN, True)
     info.set_score(0)
 
+# --- CONTROLS ---
 def on_a_pressed():
     if joc_iniciat == False:
         iniciar_partida()
@@ -121,7 +126,7 @@ def on_a_pressed():
         obrir_botiga()
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
-# Animacions personatje
+# Animacions de moviment
 def on_up():
     if joc_iniciat:
         animation.run_image_animation(steve, assets.animation("nena-animation-up"), 500, False)
@@ -139,6 +144,7 @@ def on_right():
         animation.run_image_animation(steve, assets.animation("nena-animation-right"), 500, False)
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right)
 
+# --- UPDATES I OVERLAPS ---
 def on_overlap(sprite, other):
     global in_trading
     if joc_iniciat:
