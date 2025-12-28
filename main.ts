@@ -3,8 +3,7 @@ namespace SpriteKind {
     export const menu_ui = SpriteKind.create()
 }
 
-/**  */
-// botiga
+//  botiga
 function obrir_botiga() {
     let llista: any;
     let opcio: number;
@@ -83,9 +82,8 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed(
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.trading, function on_on_overlap(sprite: Sprite, other: Sprite) {
     
-    if (joc_iniciat && !bucle_botiga) {
+    if (joc_iniciat) {
         in_trading = true
-        steve.say("A: Botiga", 100)
     }
     
 })
@@ -215,7 +213,11 @@ game.onUpdate(function on_on_update() {
             temps_parat = 0
         }
         
-        if (!steve.overlapsWith(trade)) {
+        //  Gestió del missatge de la botiga
+        if (steve.overlapsWith(trade)) {
+            in_trading = true
+            steve.say("A: Botiga")
+        } else {
             in_trading = false
             steve.say("")
         }

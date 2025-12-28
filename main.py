@@ -2,9 +2,8 @@
 class SpriteKind:
     trading = SpriteKind.create()
     menu_ui = SpriteKind.create()
-"""
-"""
-#botiga
+
+# botiga
 def obrir_botiga():
     global bucle_botiga, troncos
     steve.say("")
@@ -75,14 +74,11 @@ def on_left_pressed():
             False)
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
-
 def on_on_overlap(sprite, other):
     global in_trading
-    if joc_iniciat and not bucle_botiga:
+    if joc_iniciat:
         in_trading = True
-        steve.say("A: Botiga", 100)
 sprites.on_overlap(SpriteKind.player, SpriteKind.trading, on_on_overlap)
-
 
 def on_a_pressed():
     if not (joc_iniciat):
@@ -103,6 +99,7 @@ def mostrar_menu_inicial():
     targeta_menu = sprites.create(img_menu, SpriteKind.menu_ui)
     targeta_menu.set_position(80, 60)
     targeta_menu.z = 200
+
 def iniciar_partida():
     global joc_iniciat, steve, trade, arbol, arbol2, arbol3, pez, icono
     joc_iniciat = True
@@ -162,6 +159,7 @@ def calcular_conversi_llenya(id_prod: number, unitats: number):
     preu_unitari = product_values[id_prod]
     resultat = preu_unitari * unitats
     return Math.round_with_precision(resultat, 2)
+
 temps_parat = 0
 preu_unitari = 0
 icono: Sprite = None
@@ -201,7 +199,13 @@ def on_on_update():
                 temps_parat = 0
         else:
             temps_parat = 0
-        if not (steve.overlaps_with(trade)):
+        
+        # Gestió del missatge de la botiga
+        if steve.overlaps_with(trade):
+            in_trading = True
+            steve.say("A: Botiga")
+        else:
             in_trading = False
             steve.say("")
+
 game.on_update(on_on_update)
